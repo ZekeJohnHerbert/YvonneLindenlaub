@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yvonne Lindenlaub — Portfolio</title>
+    <style>
+        :root {
+            --bg-main: #FAF8F5;        /* Angenehmes, helles Galerie-Weiß */
+            --text-dark: #1E2221;      /* Edles, fast schwarzes Anthrazit */
+            --text-muted: #626E6B;     /* Sanftes Graugrün für Nebeninfos */
+            --brand-primary: #2A3632;  /* Tiefes, modernes Salbeischwarz */
+            --brand-accent: #CD7F5D;   /* Gedämpftes Terrakotta als Highlight */
+            --card-bg: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 0;
+        }
+
+        .wrapper {
+            max-width: 960px; /* Kompakter gehalten für bessere Lesbarkeit */
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* HERO AREA */
+        header {
+            margin-bottom: 80px;
+        }
+
+        .header-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        @media (min-width: 768px) {
+            .header-grid {
+                grid-template-columns: 1.8fr 1fr;
+                align-items: start;
+            }
+        }
+
+        .profile-statement h1 {
+            font-size: clamp(2.8rem, 7vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.0;
+            letter-spacing: -2.5px;
+            text-transform: uppercase;
+            color: var(--brand-primary);
+            margin-bottom: 24px;
+        }
+
+        .profile-statement p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 580px;
+            font-weight: 400;
+        }
+
+        .contact-box {
+            font-size: 0.95rem;
+            padding-top: 5px;
+        }
+
+        .contact-box div {
+            margin-bottom: 16px;
+        }
+
+        .contact-box span {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--brand-accent);
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .contact-box p, .contact-box a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-box a:hover {
+            color: var(--brand-accent);
+        }
+
+        /* BENTO CANVAS (NO BORDERS) */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .bento-item {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.015); /* Ultra-softer Schatten */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .bento-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+        }
+
+        .bento-item.double {
+            grid-column: span 1;
+        }
+
+        @media (min-width: 768px) {
+            .bento-item.double {
+                grid-column: span 2;
+            }
+        }
+
+        .bento-item h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--brand-accent);
+            margin-bottom: 24px;
+            font-weight: 700;
+        }
+
+        .pill-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pill {
+            background-color: var(--bg-main);
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            transition: all 0.25s ease;
+        }
+
+        .pill:hover {
+            background-color: var(--brand-primary);
+            color: white;
+        }
+
+        .bento-item p {
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        /* FLOATING BLUR-NAVBAR */
+        .filter-navbar-container {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 20px; /* Schwebt leicht im Raum */
+            z-index: 100;
+            margin-bottom: 60px;
+            padding: 8px;
+            border-radius: 40px;
+            background-color: rgba(250, 248, 245, 0.7);
+            backdrop-filter: blur(12px); /* Moderner iOS/Glassmorphism Vibe */
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+
+        .filter-navbar-container.scrolled {
+            background-color: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.03);
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding: 2px;
+        }
+
+        .filter-controls::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-btn {
+            background-color: transparent;
+            color: var(--text-muted);
+            border: none;
+            padding: 10px 22px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            white-space: nowrap;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+
+        .filter-btn:hover, .filter-btn:focus {
+            color: var(--text-dark);
+            background-color: rgba(0,0,0,0.03);
+        }
+
+        /* TIMELINE SECTIONS */
+        .scroll-section {
+            scroll-margin-top: 110px; /* Exakter Abstand wegen der schwebenden Leiste */
+            margin-bottom: 80px;
+        }
+
+        .section-headline {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--brand-accent);
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .timeline-card {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.015);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 600px) {
+            .timeline-card {
+                grid-template-columns: 180px 1fr;
+                gap: 40px;
+            }
+        }
+
+        .timeline-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.035);
+        }
+
+        .job-date {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+            letter-spacing: -0.2px;
+        }
+
+        .job-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--brand-primary);
+            line-height: 1.25;
+            margin-bottom: 6px;
+        }
+
+        .job-company {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 14px;
+        }
+
+        .job-desc {
+            font-size: 0.98rem;
+            color: var(--text-dark);
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        
+        <!-- HEADER -->
+        <header>
+            <div class="header-grid">
+                <div class="profile-statement">
+                    <h1>Yvonne<br>Lindenlaub</h1>
+                    <p>Staatlich anerkannte Erzieherin mit den Schwerpunkten Beziehungsarbeit, lösungsorientierte Schulsozialarbeit und agile, kreative Projektgestaltung.</p>
+                </div>
+                <div class="contact-box">
+                    <div>
+                        <span>Direktkontakt</span>
+                        <p><a href="mailto:y.lindenlaub@gmx.de">y.lindenlaub@gmx.de</a></p>
+                        <p><a href="tel:017657847503">0176 57847503</a></p>
+                    </div>
+                    <div>
+                        <span>Einsatz &amp; Mobilität</span>
+                        <p>Am Brink 5, 21727 Estorf</p>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">Führerschein Klasse B</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- BENTO CANVAS -->
+        <section class="bento-grid">
+            
+            <div class="bento-item double">
+                <h3>Methoden &amp; Kompetenzen</h3>
+                <div class="pill-container">
+                    <div class="pill">Einzelfallhilfe</div>
+                    <div class="pill">Krisenintervention</div>
+                    <div class="pill">Berufliche Bildung</div>
+                    <div class="pill">Soziale Kompetenztrainings</div>
+                    <div class="pill">Jugend- &amp; Heimerziehung</div>
+                    <div class="pill">Ambulante Stabilisierung</div>
+                    <div class="pill">Interkulturelle Arbeit</div>
+                </div>
+            </div>
+
+            <div class="bento-item">
+                <h3>Kreativfokus</h3>
+                <div class="pill-container">
+                    <div class="pill">Stencil- &amp; Street-Art</div>
+                    <div class="pill">Freie Fotografie</div>
+                    <div class="pill">Möbel-Umgestaltung</div>
+                    <div class="pill">Visuelle Medien</div>
+                </div>
+            </div>
+
+            <div class="bento-item">
+                <h3>Stammdaten</h3>
+                <div style="color: var(--text-dark); font-weight: 500;">
+                    <p style="margin-bottom: 8px;"><span style="color: var(--text-muted); font-size: 0.8rem; display:block;">GEBOREN</span>01.10.1982 (Werne)</p>
+                    <p style="margin-bottom: 8px;"><span style="color: var(--text-muted); font-size: 0.8rem; display:block;">STATUS</span>Ledig, Deutsch</p>
+                    <p><span style="color: var(--text-muted); font-size: 0.8rem; display:block;">SPRACHEN</span>Deutsch, Englisch</p>
+                </div>
+            </div>
+
+            <div class="bento-item double">
+                <h3>Digitale Tools</h3>
+                <div class="pill-container">
+                    <div class="pill">Bildbearbeitung</div>
+                    <div class="pill">MS Office</div>
+                    <div class="pill">LibreOffice</div>
+                    <div class="pill">Windows-Systeme</div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- FLOATING BLUR NAVBAR -->
+        <div class="filter-navbar-container" id="stickyNavbar">
+            <div class="filter-controls">
+                <a href="#sozial" class="filter-btn">Sozialarbeit &amp; Pädagogik</a>
+                <a href="#kreativ" class="filter-btn">Kreativ &amp; Fotografie</a>
+                <a href="#other" class="filter-btn">Weitere Tätigkeiten</a>
+                <a href="#edu" class="filter-btn">Ausbildung</a>
+                <a href="#ausland" class="filter-btn">Ausland &amp; Praxis</a>
+            </div>
+        </div>
+
+        <!-- TIMELINE CONTAINER -->
+        <div class="experience-list">
+            
+            <!-- ABSCHNITT 1: SOZIALARBEIT -->
+            <section id="sozial" class="scroll-section">
+                <h3 class="section-headline">Sozialarbeit &amp; Pädagogik</h3>
+
+                <div class="timeline-card">
+                    <div class="job-date">02/2024 — 04/2026</div>
+                    <div>
+                        <div class="job-title">Fachkraft in der Maßnahme „Paragraf 16H“ Ankerplatz</div>
+                        <div class="job-company">Christliches Jugend Dorf Bremervörde / Stade</div>
+                        <div class="job-desc">Schwerpunkt: Berufliche Bildung.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">02/2022 — 01/2024</div>
+                    <div>
+                        <div class="job-title">Schulsozialarbeit</div>
+                        <div class="job-company">Berufsbildende Schule II Stade</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">Seit 07/2020</div>
+                    <div>
+                        <div class="job-title">Erzieherin</div>
+                        <div class="job-company">Bethel im Norden, Ambulant betreutes Wohnen (psychisch erkrankte Erwachsene) als Erzieherin, Stade</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">02/2020 — 04/2020</div>
+                    <div>
+                        <div class="job-title">Erzieherin</div>
+                        <div class="job-company">Vereinigung Pestalozzi, Familienanaloge Wohngruppe, stationäre Wohngruppe, Hamburg- Netteinburg</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">08/2017 — 12/2018</div>
+                    <div>
+                        <div class="job-title">Erzieherin</div>
+                        <div class="job-company">Jugendhilfe STARK, Familienanaloge Wohngruppe, Thoms, Stationäre Jugendhilfe, Dortmund</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">07/2016 — 06/2017</div>
+                    <div>
+                        <div class="job-title">Erzieherin</div>
+                        <div class="job-company">B+S Soziale Dienste Nds. GmbH&amp; Co. KG, Erstunterkunft für Unbegleitete minderjährige Flüchtlinge, Stade</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">05/2015 — 06/2016</div>
+                    <div>
+                        <div class="job-title">Erzieherin</div>
+                        <div class="job-company">Jugendhilfe STARK, Familienwohngruppe Thoms, stationäre Jugendhilfe, Dortmund</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">04/2014 — 05/2014</div>
+                    <div>
+                        <div class="job-title">Erzieherin</div>
+                        <div class="job-company">Alpha e.V, Familienwohngruppe, stationäre Jugendhilfe, Wuppertal</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">04/2013 — 03/2014</div>
+                    <div>
+                        <div class="job-title">Erzieherin</div>
+                        <div class="job-company">Erzieherin - Sozialpädagogische Einrichtung, Familienanaloge Wohngruppe, Simone Thoms, stationäre Jugendhilfe, Dortmund</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">01/2011 — 04/2013</div>
+                    <div>
+                        <div class="job-title">Erzieherin</div>
+                        <div class="job-company">Gemeinschaftsdienst Kinder, Jugend &amp; Familie e.V., Inobhutnahme stationäre Jugendhilfe, Hagen</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">01/2006 — 12/2008</div>
+                    <div>
+                        <div class="job-title">Erzieherin</div>
+                        <div class="job-company">Mainly Jugendhaus am Vorwerk, Landkreis Stade (Niedersachsen), stationäre Jugendhilfe, Inobhutnahme, Stationäre Wohngruppe, Stade</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABSCHNITT 2: KREATIV & FOTOGRAFIE -->
+            <section id="kreativ" class="scroll-section">
+                <h3 class="section-headline">Kreativ &amp; Fotografie</h3>
+
+                <div class="timeline-card">
+                    <div class="job-date">01/2019 — 06/2020</div>
+                    <div>
+                        <div class="job-title">Selbstständigkeit: Künstlerin, freie Fotografie und Stencil- Art</div>
+                        <div class="job-company">Selbstständig</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">06/2014 — 12/2014</div>
+                    <div>
+                        <div class="job-title">Freie Fotografin</div>
+                        <div class="job-company">AVone Photography, Lindenlaub Lichter GbR</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">10/2009 — 10/2010</div>
+                    <div>
+                        <div class="job-title">Selbstständig: Freie Fotografin</div>
+                        <div class="job-company">AVone Photography, Lindenlaub Lichter GbR</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABSCHNITT 3: WEITERE TÄTIGKEITEN -->
+            <section id="other" class="scroll-section">
+                <h3 class="section-headline">Weitere Tätigkeiten</h3>
+
+                <div class="timeline-card">
+                    <div class="job-date">01/2015 — 04/2015</div>
+                    <div>
+                        <div class="job-title">Lagermitarbeiterin</div>
+                        <div class="job-company">IKEA Distribution, Service GmbH&amp; Co.KG, Dortmund</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">10/2010 — 12/2010</div>
+                    <div>
+                        <div class="job-title">Reinigungskraft</div>
+                        <div class="job-company">Gebäudereinigung Vogt, Dortmund</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABSCHNITT 4: AUSBILDUNG -->
+            <section id="edu" class="scroll-section">
+                <h3 class="section-headline">Schul- und Berufsausbildung</h3>
+
+                <div class="timeline-card">
+                    <div class="job-date">09/2002 — 12/2006</div>
+                    <div>
+                        <div class="job-title">Ausbildung zur staatlich anerkannten Erzieherin</div>
+                        <div class="job-company">Anna Zillken Berufskolleg; Ausbildung zur staatlich anerkannten Erzieherin, mit dem Schwerpunkt; Jugend- &amp; Heimerziehung, Dortmund</div>
+                        <div class="job-desc"><strong>Abschluss: staatl. anerkannte Erzieherin</strong></div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">09/2002 — 06/2004</div>
+                    <div>
+                        <div class="job-title">Fachhochschulreife</div>
+                        <div class="job-company">Anna- Zillken- Berufskollege, Dortmund</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">08/2000 — 07/2002</div>
+                    <div>
+                        <div class="job-title">Schulische Station</div>
+                        <div class="job-company">Lippe Berufskollege, Lünen</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">06/1993 — 07/2000</div>
+                    <div>
+                        <div class="job-title">Fachoberschulreife</div>
+                        <div class="job-company">Käthe- Kollwitz- Gesamtschule, Lünen- Süd</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABSCHNITT 5: AUSLAND & PRAXIS -->
+            <section id="ausland" class="scroll-section">
+                <h3 class="section-headline">Auslandsaufenthalt &amp; Praxis</h3>
+
+                <div class="timeline-card">
+                    <div class="job-date">04/2009 — 08/2009</div>
+                    <div>
+                        <div class="job-title">Auslandsaufenthalt</div>
+                        <div class="job-company">Indien</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">2004</div>
+                    <div>
+                        <div class="job-title">Fortbildung für Pflegeeltern der Stadt Dortmund</div>
+                        <div class="job-company">pädagogische Betreuung der Pflegekinder</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">2002 — 2004</div>
+                    <div>
+                        <div class="job-title">Erziehungspraxis, im Rahmen der Ausbildung zur Erzieherin</div>
+                        <div class="job-company">1-mal wöchentliches Angebot (Einzel- sowie Gruppenangebote) AWO- Am Holzeck, Marcus Gemeinde</div>
+                    </div>
+                </div>
+
+                <div class="timeline-card">
+                    <div class="job-date">1997 — 1999</div>
+                    <div>
+                        <div class="job-title">ehrenamtliche Tätigkeiten im Kinder- und Jugendbereich</div>
+                        <div class="job-company">Martin Luther Gemeinde und der Stadt Lünen</div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- STICKY SHADOW INTERACTION -->
+    <script>
+        const navbar = document.getElementById('stickyNavbar');
+        window.addEventListener('scroll', () => {
+            // Erkennt, ab wann die Leiste oben klebt und schaltet das Design um
+            if (navbar.getBoundingClientRect().top <= 20) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+
+</body>
+</html>
