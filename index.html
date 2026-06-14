@@ -169,24 +169,45 @@
             margin-bottom: 12px;
         }
 
-        /* FLOATING BLUR-NAVBAR */
+        /* FLOATING TO FULL-WIDTH NAVBAR */
         .filter-navbar-container {
             position: -webkit-sticky;
             position: sticky;
-            top: 20px; /* Schwebt leicht im Raum */
+            top: 0; /* Direkt an die Kante setzen, damit kein Spalt entsteht */
             z-index: 100;
+            margin-top: 20px;
             margin-bottom: 60px;
-            padding: 8px;
+            padding: 12px 24px;
+            
+            /* Startzustand: Kompakte Pille */
+            width: 100%;
             border-radius: 40px;
-            background-color: rgba(250, 248, 245, 0.7);
-            backdrop-filter: blur(12px); /* Moderner iOS/Glassmorphism Vibe */
-            -webkit-backdrop-filter: blur(12px);
-            transition: all 0.3s ease;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.015);
+            
+            /* Die Animations-Weiche für Breite und Ecken */
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        /* DIE ANIMATION: Wenn die Bar oben andockt und die Klasse .scrolled bekommt */
         .filter-navbar-container.scrolled {
+            position: fixed; /* Schaltet auf fixiert, um aus dem Wrapper auszubrechen */
+            top: 0;
+            left: 0;
+            width: 100vw; /* Dehnt sich über die volle Bildschirmbreite aus */
+            border-radius: 0 0 16px 16px; /* Ecken oben werden flach, unten bleiben sie leicht gerundet */
+            padding: 15px calc((100vw - 912px) / 2); /* Zentriert die Knöpfe innen analog zum Inhalt */
             background-color: rgba(255, 255, 255, 0.85);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.03);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.04);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Verhindert Ruckeln auf Mobilgeräten */
+        @media (max-width: 960px) {
+            .filter-navbar-container.scrolled {
+                padding: 15px 24px;
+            }
         }
 
         .filter-controls {
@@ -194,7 +215,7 @@
             gap: 6px;
             overflow-x: auto;
             scrollbar-width: none;
-            padding: 2px;
+            max-width: 912px; /* Hält die Knöpfe auf der Breite des restlichen Contents */
         }
 
         .filter-controls::-webkit-scrollbar {
@@ -217,12 +238,12 @@
 
         .filter-btn:hover, .filter-btn:focus {
             color: var(--text-dark);
-            background-color: rgba(0,0,0,0.03);
+            background-color: rgba(0,0,0,0.04);
         }
 
         /* TIMELINE SECTIONS */
         .scroll-section {
-            scroll-margin-top: 110px; /* Exakter Abstand wegen der schwebenden Leiste */
+            scroll-margin-top: 100px; /* Exakter Abstand wegen der schwebenden Leiste */
             margin-bottom: 80px;
         }
 
@@ -292,7 +313,6 @@
 
     <div class="wrapper">
         
-        <!-- HEADER -->
         <header>
             <div class="header-grid">
                 <div class="profile-statement">
@@ -314,7 +334,6 @@
             </div>
         </header>
 
-        <!-- BENTO CANVAS -->
         <section class="bento-grid">
             
             <div class="bento-item double">
@@ -361,7 +380,6 @@
 
         </section>
 
-        <!-- FLOATING BLUR NAVBAR -->
         <div class="filter-navbar-container" id="stickyNavbar">
             <div class="filter-controls">
                 <a href="#sozial" class="filter-btn">Sozialarbeit &amp; Pädagogik</a>
@@ -372,10 +390,8 @@
             </div>
         </div>
 
-        <!-- TIMELINE CONTAINER -->
         <div class="experience-list">
             
-            <!-- ABSCHNITT 1: SOZIALARBEIT -->
             <section id="sozial" class="scroll-section">
                 <h3 class="section-headline">Sozialarbeit &amp; Pädagogik</h3>
 
@@ -464,12 +480,11 @@
                     <div class="job-date">01/2006 — 12/2008</div>
                     <div>
                         <div class="job-title">Erzieherin</div>
-                        <div class="job-company">Mainly Jugendhaus am Vorwerk, Landkreis Stade (Niedersachsen), stationäre Jugendhilfe, Inobhutnahme, Stationäre Wohngruppe, Stade</div>
+                        <div class="job-company">Jugendhaus am Vorwerk, Landkreis Stade (Niedersachsen), stationäre Jugendhilfe, Inobhutnahme, Stationäre Wohngruppe, Stade</div>
                     </div>
                 </div>
             </section>
 
-            <!-- ABSCHNITT 2: KREATIV & FOTOGRAFIE -->
             <section id="kreativ" class="scroll-section">
                 <h3 class="section-headline">Kreativ &amp; Fotografie</h3>
 
@@ -498,7 +513,6 @@
                 </div>
             </section>
 
-            <!-- ABSCHNITT 3: WEITERE TÄTIGKEITEN -->
             <section id="other" class="scroll-section">
                 <h3 class="section-headline">Weitere Tätigkeiten</h3>
 
@@ -519,7 +533,6 @@
                 </div>
             </section>
 
-            <!-- ABSCHNITT 4: AUSBILDUNG -->
             <section id="edu" class="scroll-section">
                 <h3 class="section-headline">Schul- und Berufsausbildung</h3>
 
@@ -557,7 +570,6 @@
                 </div>
             </section>
 
-            <!-- ABSCHNITT 5: AUSLAND & PRAXIS -->
             <section id="ausland" class="scroll-section">
                 <h3 class="section-headline">Auslandsaufenthalt &amp; Praxis</h3>
 
@@ -597,12 +609,15 @@
         </div>
     </div>
 
-    <!-- STICKY SHADOW INTERACTION -->
     <script>
         const navbar = document.getElementById('stickyNavbar');
+        // Wir merken uns, wo die Navbar im Raum startet
+        const initialNavbarOffset = navbar.offsetTop;
+
         window.addEventListener('scroll', () => {
-            // Erkennt, ab wann die Leiste oben klebt und schaltet das Design um
-            if (navbar.getBoundingClientRect().top <= 20) {
+            // Sobald der Scroll-Wert die ursprüngliche Position der Navbar erreicht,
+            // wird sie zur Full-Width-Bar transformiert.
+            if (window.scrollY >= initialNavbarOffset) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
