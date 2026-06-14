@@ -170,14 +170,14 @@
             margin-bottom: 12px;
         }
 
-        /* DER DETEKTOR FÜR STICKY */
+        /* DETEKTOR FÜR STICKY */
         .nav-detector {
             height: 1px;
             width: 100%;
             margin-bottom: 20px;
         }
 
-        /* DIE FLÜSSIGE NAVBAR */
+        /* FLÜSSIGE NAVBAR */
         .filter-navbar-container {
             position: -webkit-sticky;
             position: sticky;
@@ -197,7 +197,7 @@
                         padding 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* ZUSTAND: Komplett oben angedockt (Full-Width über den ganzen Bildschirm) */
+        /* Angedockter Zustand (Full-Width) */
         .filter-navbar-container.scrolled {
             max-width: 100vw;
             border-radius: 0 0 20px 20px;
@@ -220,24 +220,27 @@
             }
         }
 
+        /* Flex-Wrap erlaubt das automatische Umbrechen in 2 Zeilen auf Smartphones */
         .filter-controls {
             display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            scrollbar-width: none;
+            gap: 8px;
+            flex-wrap: wrap; 
             width: 100%;
+            justify-content: flex-start;
         }
 
-        .filter-controls::-webkit-scrollbar {
-            display: none;
+        @media (max-width: 600px) {
+            .filter-controls {
+                justify-content: center; /* Zentriert die Navigationspunkte auf kleinen Displays */
+            }
         }
 
         .filter-btn {
             background-color: transparent;
             color: var(--text-muted);
             border: none;
-            padding: 10px 22px;
-            font-size: 0.88rem;
+            padding: 8px 18px;
+            font-size: 0.85rem;
             font-weight: 600;
             border-radius: 30px;
             cursor: pointer;
@@ -251,9 +254,16 @@
             background-color: rgba(63, 143, 129, 0.08);
         }
 
+        /* Der aktive Highlight-Zustand beim Scrollen */
+        .filter-btn.active {
+            color: #FFFFFF !important;
+            background-color: var(--brand-accent) !important;
+            box-shadow: 0 4px 12px rgba(63, 143, 129, 0.2);
+        }
+
         /* TIMELINE SECTIONS */
         .scroll-section {
-            scroll-margin-top: 90px;
+            scroll-margin-top: 130px; /* Erhöhter Abstand, falls die Leiste mobil zweizeilig wird */
             margin-bottom: 80px;
         }
 
@@ -392,11 +402,11 @@
 
     <div class="filter-navbar-container" id="stickyNavbar">
         <div class="filter-controls">
-            <a href="#sozial" class="filter-btn">Sozialarbeit &amp; Pädagogik</a>
-            <a href="#kreativ" class="filter-btn">Kreativ &amp; Fotografie</a>
-            <a href="#other" class="filter-btn">Weitere Tätigkeiten</a>
-            <a href="#edu" class="filter-btn">Ausbildung</a>
-            <a href="#ausland" class="filter-btn">Ausland &amp; Praxis</a>
+            <a href="#sozial" class="filter-btn" id="btn-sozial">Sozialarbeit &amp; Pädagogik</a>
+            <a href="#kreativ" class="filter-btn" id="btn-kreativ">Kreativ &amp; Fotografie</a>
+            <a href="#other" class="filter-btn" id="btn-other">Weitere Tätigkeiten</a>
+            <a href="#edu" class="filter-btn" id="btn-edu">Ausbildung</a>
+            <a href="#ausland" class="filter-btn" id="btn-ausland">Ausland &amp; Praxis</a>
         </div>
     </div>
 
@@ -623,8 +633,11 @@
     <script>
         const navbar = document.getElementById('stickyNavbar');
         const detector = document.getElementById('navDetector');
+        const sections = document.querySelectorAll('.scroll-section');
+        const navButtons = document.querySelectorAll('.filter-btn');
 
-        const observer = new IntersectionObserver((entries) => {
+        // 1. ENGINE FOR FULL-WIDTH TRANSITION (Sticky Detector)
+        const stickyObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) {
                     navbar.classList.add('scrolled');
@@ -636,8 +649,33 @@
             threshold: [0],
             rootMargin: "-1px 0px 0px 0px"
         });
+        stickyObserver.observe(detector);
 
-        observer.observe(detector);
+        // 2. SCROLL-SPY ENGINE (Automatisches Highlighten beim Runterscrollen)
+        const scrollSpyOptions = {
+            root: null,
+            rootMargin: '-150px 0px -60% 0px', // Triggert, wenn der Bereich im Fokus des Lesers ist
+            threshold: 0
+        };
+
+        const scrollSpyObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const activeId = entry.target.getAttribute('id');
+                    
+                    // Alle Highlights entfernen
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Genau den Button der aktuellen Sektion highlighten
+                    const activeBtn = document.getElementById(`btn-${activeId}`);
+                    if (activeBtn) {
+                        activeBtn.classList.add('active');
+                    }
+                }
+            });
+        }, scrollSpyOptions);
+
+        sections.forEach(section => scrollSpyObserver.observe(section));
     </script>
 
 </body>
